@@ -1,0 +1,56 @@
+I have a form where I will add one information 
+id name age
+
+Fetch these details for all rows and display in table 
+
+Component Class:
+
+@Component({
+    selectors: <home-app>
+    template: home-app-component.html
+})
+export  class HomeAppComponent  implements ngOnInit {
+     
+    ngOnInit() {
+        this.employeeForm = this.fb.group({
+            id: [''],
+            name: [''],
+            age: [''] 
+        })
+        fetchEmployeeDetails();
+    }
+
+
+    fetchEmployeeDetails() {
+        this.employeeService.getEmployee().
+        subscribe(data = {
+            this.employees = data;
+        });
+    }
+
+    saveEmployee() {
+        const employee = {
+            id: this.employeeForm.get('id')?.value,
+            name: this.employeeForm.get('name')?.value,
+            age: this.employeeForm.get('age')?.value
+        };
+        this.employeeService.saveEmployee(employee).subscribe(() => 
+           this.fetchEmployeeDetails();
+     });
+}
+
+
+Service Class;
+
+@Injectable({
+    ProvidedIn: root
+})
+export class EmployeeService {
+    getEmployee() {
+        return this.http.get<any[]>('/api/employees');
+    }
+
+    saveEmployee(employees: any) {
+        return this.http.post('/api/employees', employees);
+    }
+}
